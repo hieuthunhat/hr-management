@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.hieuthunhat.hrm.models.Staff;
 import com.hieuthunhat.hrm.repositories.StaffRepository;
-import com.hieuthunhat.hrm.repositories.StaffRowMapper;
 
 /**
  * Implementation of the StaffRepository interface.
@@ -26,9 +25,10 @@ public class StaffRepositoryImpl implements StaffRepository {
   /**
    * Create a new staff member.
    * @param staff
+   * @return the number of rows affected
    */
   @Override
-  public void create(Staff staff) {
+  public int create(Staff staff) {
     String sql = "INSERT INTO " + TABLE_NAME + " (name, email, phone, dob, address, department, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     int rowsAffected = jdbcTemplate.update(sql,
       staff.getName(),
@@ -43,14 +43,16 @@ public class StaffRepositoryImpl implements StaffRepository {
     if (rowsAffected == 0) {
       throw new RuntimeException("Failed to create staff member");
     }
+    return rowsAffected;
   }
 
   /**
    * Update an existing staff member.
    * @param staff
+   * @return the number of rows affected
    */
   @Override
-  public void update(Staff staff) {
+  public int update(Staff staff) {
     String sql = "UPDATE " + TABLE_NAME + " SET name = ?, email = ?, phone = ?, dob = ?, address = ?, department = ?, updated_at = ? WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(sql,
       staff.getName(),
@@ -65,19 +67,22 @@ public class StaffRepositoryImpl implements StaffRepository {
     if (rowsAffected == 0) {
       throw new RuntimeException("Failed to update staff member with ID: " + staff.getId());
     }
+    return rowsAffected;
   }
 
   /**
    * Remove a staff member by ID.
    * @param id
+   * @return the number of rows affected
    */
   @Override
-  public void remove(Long id) {
+  public int remove(Long id) {
     String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(sql, id);
     if (rowsAffected == 0) {
       throw new RuntimeException("Failed to remove staff member with ID: " + id);
     }
+    return rowsAffected;
   }
 
   /**
@@ -99,7 +104,7 @@ public class StaffRepositoryImpl implements StaffRepository {
    * Find staff members by page and size.
    * @param page
    * @param size
-   * @return
+   * @return the list of staff members
    */
   public List<Staff> findByPageAndSize(int page, int size) {
     String sql = "SELECT * FROM " + TABLE_NAME + " WHERE deleted_at IS NULL" + " ORDER BY id ASC" +  " LIMIT ? OFFSET ?";
@@ -115,11 +120,12 @@ public class StaffRepositoryImpl implements StaffRepository {
    * Soft remove a staff member by ID.
    * @param id
    */
-  public void softRemove(Long id) {
+  public int softRemove(Long id) {
     String sql = "UPDATE " + TABLE_NAME + " SET deleted_at = NOW() WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(sql, id);
     if (rowsAffected == 0) {
       throw new RuntimeException("Failed to soft remove staff member with ID: " + id);
     }
+    return rowsAffected;
   }
 }

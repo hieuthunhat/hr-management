@@ -7,8 +7,8 @@ import com.hieuthunhat.hrm.models.Staff;
  * StaffRepositoryImp
  */
 public interface StaffRepository {
-  void update(Staff staff);
-  void remove(Long id);
+  int update(Staff staff);
+  int remove(Long id);
   Staff find(Long id);
-  void create(Staff staff);
+  int create(Staff staff);
 }

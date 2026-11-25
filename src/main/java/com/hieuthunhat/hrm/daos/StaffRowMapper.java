@@ -1,4 +1,4 @@
-package com.hieuthunhat.hrm.repositories;
+package com.hieuthunhat.hrm.daos;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +15,14 @@ import com.hieuthunhat.hrm.enums.Department;
  * StaffRowMapper
  */
 public class StaffRowMapper implements RowMapper<Staff> {
+
+  /**
+   * Maps a row from the ResultSet to a Staff object.
+   * @param rs the ResultSet to map
+   * @param rowNum the row number
+   * @return the mapped Staff object
+   * @throws SQLException if an error occurs while mapping the row
+   */
   @Override
   public Staff mapRow(ResultSet rs, int rowNum) throws SQLException {
     Staff staff = new Staff();
